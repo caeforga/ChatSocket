@@ -5,6 +5,7 @@
  */
 package clienteservidor;
 
+import java.awt.event.KeyEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class ClientForm extends javax.swing.JFrame {
     Socket server = null;
     DataInputStream dis = null;
     DataOutputStream dos = null;
-
+    String id = "->Tú:";
     /**
      * Creates new form ClientForm
      */
@@ -60,6 +61,12 @@ public class ClientForm extends javax.swing.JFrame {
         txt_RecMsg.setRows(5);
         jScrollPane1.setViewportView(txt_RecMsg);
 
+        txt_msg.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_msgKeyPressed(evt);
+            }
+        });
+
         btn_recibir.setText("Receive");
         btn_recibir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -79,33 +86,33 @@ public class ClientForm extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
+                .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btn_conectar)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_msg, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(35, 35, 35)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_recibir)
-                            .addComponent(btn_enviar))))
-                .addContainerGap(45, Short.MAX_VALUE))
+                        .addComponent(btn_conectar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_recibir))
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txt_msg, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
+                        .addComponent(btn_enviar)))
+                .addGap(27, 27, 27))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(22, 22, 22)
-                .addComponent(btn_conectar)
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_conectar)
                     .addComponent(btn_recibir))
-                .addGap(30, 30, 30)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_msg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_enviar))
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addGap(17, 17, 17))
         );
 
         pack();
@@ -141,10 +148,26 @@ public class ClientForm extends javax.swing.JFrame {
     private void btn_enviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_enviarActionPerformed
             try {
                 dos.writeUTF(txt_msg.getText());
+                txt_RecMsg.append("\n" + id + txt_msg.getText());
+                txt_msg.setText("");
+                txt_msg.requestFocus();
             } catch (IOException ex) {
                 Logger.getLogger(ClientForm.class.getName()).log(Level.SEVERE, null, ex);
             }
     }//GEN-LAST:event_btn_enviarActionPerformed
+
+    private void txt_msgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_msgKeyPressed
+            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                try {
+                dos.writeUTF(txt_msg.getText());
+                txt_RecMsg.append("\n" + id + txt_msg.getText());
+                txt_msg.setText("");
+                txt_msg.requestFocus();
+            } catch (IOException ex) {
+                Logger.getLogger(ClientForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            }
+    }//GEN-LAST:event_txt_msgKeyPressed
 
     /**
      * @param args the command line arguments

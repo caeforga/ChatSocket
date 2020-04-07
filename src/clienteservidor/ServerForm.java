@@ -5,6 +5,7 @@
  */
 package clienteservidor;
 
+import java.awt.event.KeyEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class ServerForm extends javax.swing.JFrame {
     Socket client = null;
     DataOutputStream dos = null;
     DataInputStream dis = null;
+    String id = "->Tú:";
     
     public ServerForm() {
         initComponents();
@@ -57,6 +59,12 @@ public class ServerForm extends javax.swing.JFrame {
         txt_RecMsg.setColumns(20);
         txt_RecMsg.setRows(5);
         jScrollPane1.setViewportView(txt_RecMsg);
+
+        txt_msg.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_msgKeyPressed(evt);
+            }
+        });
 
         btn_enviar.setText("Send");
         btn_enviar.addActionListener(new java.awt.event.ActionListener() {
@@ -119,10 +127,27 @@ public class ServerForm extends javax.swing.JFrame {
             String msg = txt_msg.getText();
             try {
                 dos.writeUTF(msg);
+                txt_RecMsg.append("\n" + id + msg);
+                txt_msg.setText("");
+                txt_msg.requestFocus();
             } catch (IOException ex) {
                 Logger.getLogger(ServerForm.class.getName()).log(Level.SEVERE, null, ex);
             }
     }//GEN-LAST:event_btn_enviarActionPerformed
+
+    private void txt_msgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_msgKeyPressed
+            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                String msg = txt_msg.getText();
+                try {
+                dos.writeUTF(msg);
+                txt_RecMsg.append("\n" + id + msg);
+                txt_msg.setText("");
+                txt_msg.requestFocus();
+                } catch (IOException ex) {
+                Logger.getLogger(ServerForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+    }//GEN-LAST:event_txt_msgKeyPressed
 
     /**
      * @param args the command line arguments
